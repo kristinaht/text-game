@@ -7,12 +7,14 @@ namespace StoryAdventure.Models
     public string PlayerName { set; get; }
     public int Room { set; get; }
     public bool Note { set; get; }
+    public bool Food { set; get; }
 
     public Game(string playerName, int room)
     {
       PlayerName = playerName;
       Room = room;
       Note = false;
+      Food = false;
     }
     public void RunGame()
     {
@@ -28,6 +30,8 @@ namespace StoryAdventure.Models
     }
     public void LoadRoomDoorstep()
     {
+      Console.BackgroundColor = ConsoleColor.Blue;
+      Console.ForegroundColor = ConsoleColor.DarkGray;
       Console.WriteLine(@"
       You stand on the doorstep of a run-down house. What would you like to do?
         K: Knock on the door
@@ -37,7 +41,13 @@ namespace StoryAdventure.Models
       string lowerInput = input.ToLower();
       if (input == "k")
       {
-        Console.WriteLine("You hear a voice from the other side of the door. 'What is the password?'");
+        Console.WriteLine(@"You hear a voice from the other side of the door. 
+' _    _ _   _  ___ _____   _____ _____   _____ _   _ _____  ______  ___  _____ _____ _    _ _________________ ___  
+| |  | | | | |/ _ |_   _| |_   _/  ___| |_   _| | | |  ___| | ___ \/ _ \/  ___/  ___| |  | |  _  | ___ |  _  |__ \ 
+| |  | | |_| / /_\ \| |     | | \ `--.    | | | |_| | |__   | |_/ / /_\ \ `--.\ `--.| |  | | | | | |_/ | | | |  ) |
+| |/\| |  _  |  _  || |     | |  `--. \   | | |  _  |  __|  |  __/|  _  |`--. \`--. | |/\| | | | |    /| | | | / / 
+\  /\  | | | | | | || |    _| |_/\__/ /   | | | | | | |___  | |   | | | /\__/ /\__/ \  /\  \ \_/ | |\ \| |/ / |_|  
+ \/  \/\_| |_\_| |_/\_/    \___/\____/    \_/ \_| |_\____/  \_|   \_| |_\____/\____/ \/  \/ \___/\_| \_|___/  (_)'");
         string password = Console.ReadLine();
         string passwordLower = password.ToLower();
         if (passwordLower == "password")
@@ -100,7 +110,7 @@ namespace StoryAdventure.Models
       }
       else if (lowerInput == "s")
       {
-        LoadRoomBack();
+        LoadRoomKitchen();
       }
       else if (lowerInput == "f")
       {
@@ -128,7 +138,7 @@ namespace StoryAdventure.Models
       string yardInputLower = yardInput.ToLower();
       if (yardInputLower == "s")
       {
-        LoadRoomBack();
+        LoadRoomKitchen();
       }
       else if (yardInputLower == "f")
       {
@@ -149,9 +159,45 @@ namespace StoryAdventure.Models
     {
 
     }
-    public void LoadRoomBack()
+    public void LoadRoomKitchen()
     {
-
+      Console.WriteLine(@"You come inside and realize you are in the kitchen. You see leftover food on the table and a door to the rest of the house. You will:
+        T: take the food
+        Y: go back to the yard
+        D: open the door to the rest of the house");
+      string kitchenInput = Console.ReadLine();
+      string kitchenInputLower = kitchenInput.ToLower();
+      if(kitchenInputLower == "t")
+      {
+        if (Food == false)
+        {
+        Food = true;
+        Console.WriteLine("You take a half-eaten piece of steak.");
+        LoadRoomKitchen();
+        }
+        else
+        {
+          Console.WriteLine("You have already taken the only food worth taking from the plate.");
+          LoadRoomKitchen();
+        }
+      }
+      else if (kitchenInputLower == "y")
+      {
+        LoadRoomBackyard();
+      }
+      else if (kitchenInputLower == "d")
+      {
+        if(Food == true)
+        {
+          Console.WriteLine("A very angry hungry ogre jumps out yelling and kills you. You are dead.");
+          GameOver();
+        }
+        else if(Food == false)
+        {
+          Console.WriteLine("The door seems blocked. Voice on the other side says: 'I'm starving! You got any food??'");
+          LoadRoomKitchen();
+        }
+      }
     }
   }
 }
